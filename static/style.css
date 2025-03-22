@@ -9,6 +9,7 @@ body {
 /* Make the header fixed at the top */
 h1 {
     text-align: center;
+        border-radius: 30px;
     color: #4CAF50;
     font-size: 2.5rem;
     animation: fadeIn 1s ease-out;
@@ -24,6 +25,7 @@ h1 {
 form {
     background-color: #fff;
     padding: 40px;
+    border-radius: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -32,7 +34,7 @@ form {
     margin: 20px auto 20px auto;
     padding: 20px;
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     animation: slideUp 0.5s ease-out;
     display: flex;
@@ -171,4 +173,88 @@ th {
     table th {
         font-size: 0.9rem;
     }
+}
+
+/* Add to existing style.css */
+
+/* Error styling */
+.error {
+    border-color: #FF6347 !important;
+}
+
+.error-message {
+    color: #FF6347;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.top-error {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffebee;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+/* Loading state */
+form.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Enhance table hover effect */
+table tr:hover {
+    background-color: #f9f9f9;
+    transition: background-color 0.2s ease;
+}
+
+/* Ensure container is properly styled when shown */
+.container {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Fix form positioning */
+form {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+/* Ensure h1 stays visible */
+h1 {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    padding: 20px;
+    z-index: 10;
+}
+
+/* Error message styling */
+.error-message.top-error {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffebee;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 1000;
 }

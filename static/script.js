@@ -1,84 +1,121 @@
-// Функция за изпращане на POST заявка към Flask API и зареждане на резултати на втората страница
-async function submitInvestmentForm(event) {
-    event.preventDefault(); // Превенция на стандартното поведение на формата
+// static/script.js
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('investment-form');
+    const container = document.getElementById('results-container');
+    const submitBtn = form.querySelector('.btn');
 
-    // Вземи стойностите от формата
-    const start_date = document.getElementById('start_date').value;
-    const end_date = document.getElementById('end_date').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const period_weeks = parseInt(document.getElementById('period_weeks').value);
+    // Initially hide container
+    container.style.display = 'none';
 
-    const formData = {
-        start_date: start_date,
-        end_date: end_date,
-        amount: amount,
-        period_weeks: period_weeks
-    };
+    // Form submission handler
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    try {
-        // Изпращане на POST заявка с данните от формата
-        const response = await fetch('/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
+        // Show loading state
+        form.classList.add('loading');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Изчисляване...';
 
-        // Проверка дали заявката е успешна
-        if (!response.ok) {
-            throw new Error('Грешка при изпращането на данните');
+        try {
+            const formData = new FormData(form);
+            const response = await fetch('/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const data = await response.json();
+
+            if (data.error) {
+                showErrorMessage(data.error);
+                return;
+            }
+
+            // Hide form and show results
+            form.style.display = 'none';
+            container.style.display = 'block';
+
+            // Display results from JSON
+            displayResults(data);
+
+        } catch (error) {
+            showErrorMessage('Възникна грешка при изчислението. Моля, опитайте отново.');
+            console.error('Error:', error);
+        } finally {
+            // Remove loading state
+            form.classList.remove('loading');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Изчисли';
         }
+    });
 
-        // Получаване на отговор в JSON формат
-        const data = await response.json();
-
-        // Обработване на данните и зареждане на резултати на втората страница
-        if (data) {
-            const {
-                investment_history,
-                total_invested,
-                total_btc,
-                current_price,
-                current_value,
-                profit_loss_percentage,
-                investment_status
-            } = data;
-
-            // Пример за обработка на данни и показване на резултатите (можеш да промениш това според нуждите си)
-            const resultContainer = document.getElementById('investment-result');
-            resultContainer.innerHTML = `
-                <h2>Резултати от инвестицията</h2>
-                <table border="1">
+    // Function to display results
+    function displayResults(data) {
+        container.innerHTML = `
+            <div class="result-summary">
+                <div class="result-summary-left">
+                    <div><strong>📈 Текуща цена на биткойн:</strong> $${data.current_price}</div>
+                    <div><strong>💸 Средна цена на закупуване:</strong> $${data.average_purchase_price}</div>
+                    <div><strong>🔹 Общо закупени биткойни:</strong> ${data.total_btc} BTC</div>
+                    <div><strong>💰 Общо инвестирана сума:</strong> $${data.total_invested}</div>
+                    <div><strong>💎 Стойност на инвестицията:</strong> $${data.current_value}</div>
+                    <div><strong>📊 Процент на печалба/загуба:</strong> ${data.profit_loss_percentage}%</div>
+                </div>
+                <div class="result-summary-right">
+                    <div class="${data.investment_status === 'ПЕЧАЛБА' ? 'profit' : 'loss'}">
+                        <strong>✅ Инвестицията е на ${data.investment_status}!</strong> 🚀
+                    </div>
+                </div>
+                <button onclick="resetPage()" class="btn">Ново Изчисление</button>
+            </div>
+            <div class="results">
+                <h2>📊 История на инвестициите</h2>
+                <table>
                     <thead>
                         <tr>
                             <th>Дата</th>
                             <th>Цена на биткойн</th>
-                            <th>Закупено количество BTC</th>
+                            <th>Закупено количество</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${investment_history.map(item => `
+                        ${data.investment_history.map(row => `
                             <tr>
-                                <td>${item[0]}</td>
-                                <td>${item[1]}</td>
-                                <td>${item[2]}</td>
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
-                <p><strong>Общо инвестираната сума: </strong>$${total_invested}</p>
-                <p><strong>Общо закупени BTC: </strong>${total_btc}</p>
-                <p><strong>Текуща цена на BTC: </strong>$${current_price}</p>
-                <p><strong>Текуща стойност на инвестицията: </strong>$${current_value}</p>
-                <p><strong>Печалба/Загуба: </strong>${profit_loss_percentage}%</p>
-                <p><strong>Статус: </strong>${investment_status}</p>
-            `;
-        }
-    } catch (error) {
-        console.error('Грешка:', error);
-    }
-}
+            </div>
+        `;
 
-// Добави обработчик на събитие за изпращането на формата
-document.getElementById('investment-form').addEventListener('submit', submitInvestmentForm);
+        // Animate in
+        container.style.opacity = '0';
+        setTimeout(() => {
+            container.style.transition = 'opacity 0.5s ease-in';
+            container.style.opacity = '1';
+        }, 10);
+    }
+
+    // Reset page function
+    window.resetPage = function() {
+        container.style.display = 'none';
+        form.style.display = 'block';
+        container.innerHTML = '';
+    };
+
+    // Show error message
+    function showErrorMessage(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message top-error';
+        errorDiv.textContent = message;
+        document.body.insertBefore(errorDiv, document.body.firstChild);
+        setTimeout(() => errorDiv.remove(), 5000);
+    }
+});

@@ -3,23 +3,31 @@ from datetime import datetime, timedelta
 import requests
 from lxml import html
 from tabulate import tabulate
+import json
+import os
 
 app = Flask(__name__)
 
 def get_bitcoin_price_on_date(date_input):
-    """Fetch Bitcoin price for the given date using CryptoCompare API."""
-    url = f'https://min-api.cryptocompare.com/data/pricehistorical'
-    params = {
-        'fsym': 'BTC',
-        'tsyms': 'USD',
-        'ts': int(datetime.strptime(date_input, '%Y-%m-%d').timestamp())
+    """Fetch Bitcoin price for the given date using CoinMarketCap."""
+    date_obj = datetime.strptime(date_input, "%Y-%m-%d")
+    formatted_date = date_obj.strftime("%Y%m%d")
+    url = f'https://coinmarketcap.com/historical/{formatted_date}/'
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
     }
-    
+
     try:
-        response = requests.get(url, params=params)
+        response = requests.get(url, headers=headers)
         response.raise_for_status()
-        data = response.json()
-        return data['BTC']['USD']
+        tree = html.fromstring(response.content)
+        price_xpath = '//*[@id="__next"]/div[2]/div[2]/div/div[1]/div[3]/div[1]/div[3]/div/table/tbody/tr[1]/td[5]/div'
+        price = tree.xpath(price_xpath)
+        if price:
+            return float(price[0].text.strip().replace(',', '').replace('$', ''))
+        else:
+            return None
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data for {date_input}: {e}")
         return None
@@ -80,6 +88,28 @@ def calculate_investment(start_date_input, end_date_input, amount, period_weeks)
 
     return investment_history, total_invested, total_btc, current_price, current_value, profit_loss_percentage, investment_status, average_purchase_price
 
+import json
+
+def save_results_to_json(data, filename="investment_results.json"):
+    """Записва резултатите в JSON файл."""
+    try:
+        # Съставяме пътя към директорията 'static/json/'
+        dir_path = os.path.join(os.getcwd(), "static", "json")
+        
+        # Проверяваме дали директорията съществува, ако не, я създаваме
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        # Пълният път към файла
+        file_path = os.path.join(dir_path, filename)
+
+        # Записваме резултатите в JSON файла
+        with open(file_path, 'w') as json_file:
+            json.dump(data, json_file, indent=4)
+        print(f"Резултатите бяха записани в {file_path}")
+    except Exception as e:
+        print(f"Грешка при записване на JSON файл: {e}")
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -92,34 +122,23 @@ def index():
 
         if result:
             investment_history, total_invested, total_btc, current_price, current_value, profit_loss_percentage, investment_status, average_purchase_price = result
-            # Ако се използва за JSON отговор
-            if request.is_json:
-                return jsonify({
-                    "investment_history": investment_history,
-                    "total_invested": total_invested,
-                    "total_btc": total_btc,
-                    "current_price": current_price,
-                    "current_value": current_value,
-                    "profit_loss_percentage": profit_loss_percentage,
-                    "investment_status": investment_status
-                })
-            else:
-                # ако заявката е за HTML, връщаме стандартния HTML отговор
-                return render_template(
-                    "index.html", 
-                    investment_history=investment_history, 
-                    total_invested=total_invested, 
-                    total_btc=total_btc, 
-                    current_price=current_price, 
-                    current_value=current_value, 
-                    profit_loss_percentage=profit_loss_percentage, 
-                    investment_status=investment_status,
-                    average_purchase_price=average_purchase_price)
+            response_data = {
+                "investment_history": investment_history,
+                "total_invested": total_invested,
+                "total_btc": total_btc,
+                "current_price": current_price,
+                "current_value": current_value,
+                "profit_loss_percentage": profit_loss_percentage,
+                "investment_status": investment_status,
+                "average_purchase_price": average_purchase_price
+            }
+            save_results_to_json(response_data)
+            return jsonify(response_data)
         else:
-            error_message = "❌ Грешка: Не можа да се извлече текущата цена на биткойн."
-            return render_template("index.html", error_message=error_message)
+            return jsonify({"error": "Не можа да се извлече текущата цена на биткойн"}), 500
 
     return render_template("index.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
