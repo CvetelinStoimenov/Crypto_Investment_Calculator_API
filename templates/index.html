@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Крипто Инвестиции</title>
+    <!-- Използваме url_for за да посочим пътя към CSS в директорията static -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Инвестиции в Биткойн</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="start_date">Начална дата:</label>
+            <input type="date" id="start_date" name="start_date" required>
+        </div>
+        <div class="form-group">
+            <label for="end_date">Крайна дата:</label>
+            <input type="date" id="end_date" name="end_date" required>
+        </div>
+        <div class="form-group">
+            <label for="amount">Сума за инвестиция на период:</label>
+            <input type="number" id="amount" name="amount" required>
+        </div>
+        <div class="form-group">
+            <label for="period_weeks">Периодичност (в седмици):</label>
+            <input type="number" id="period_weeks" name="period_weeks" required>
+        </div>
+        <button type="submit" class="btn">Изчисли</button>
+    </form>
+
+    <div class="container">
+        {% if investment_history %}
+        <div class="results">
+            <h2>📊 История на инвестициите</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Цена на биткойн</th>
+                        <th>Закупено количество</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in investment_history %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="result-summary">
+            <div class="result-summary-left">
+                <div><strong>📈 Текуща цена на биткойн:</strong> ${{ current_price }}</div>
+                <div><strong>💸 Средна цена на закупуване:</strong> ${{ average_purchase_price }}</div>
+                <div><strong>🔹 Общо закупени биткойни:</strong> {{ total_btc }} BTC</div>
+                <div><strong>💰 Общо инвестирана сума:</strong> ${{ total_invested }}</div>
+                <div><strong>💎 Стойност на инвестицията към днешна дата:</strong> ${{ current_value }}</div>
+                <div><strong>📊 Процент на печалба/загуба:</strong> {{ profit_loss_percentage }}%</div>
+            </div>
+
+            <div class="result-summary-right">
+                <div class="{{ 'profit' if investment_status == 'ПЕЧАЛБА' else 'loss' }}">
+                    <strong>✅ Инвестицията е на {{ investment_status }}!</strong> 🚀
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Свържи JavaScript файла -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

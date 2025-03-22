@@ -1,0 +1,174 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Make the header fixed at the top */
+h1 {
+    text-align: center;
+    color: #4CAF50;
+    font-size: 2.5rem;
+    animation: fadeIn 1s ease-out;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10; /* Ensure the header stays above other content */
+}
+
+/* Make the form fixed below the header */
+form {
+    background-color: #fff;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust the container to allow space for the fixed header */
+.container {
+    margin: 20px auto 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s ease-out;
+    display: flex;
+    justify-content: center;
+    gap: 400px;
+    font-size: 1.2rem;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus {
+    border-color: #4CAF50;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.results {
+    margin-top: 30px;
+    animation: fadeIn 1.5s ease-out;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    animation: slideUp 0.7s ease-out;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.result-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 80px;
+    animation: fadeIn 2s ease-out;
+    font-size: 1.8rem;
+}
+
+.profit {
+    color: #4CAF50;
+    font-weight: bold;
+    animation: fadeIn 2s ease-out;
+}
+
+.loss {
+    color: #FF6347;
+    font-weight: bold;
+    animation: fadeIn 2s ease-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive design for tables and body */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    /* Make tables scrollable on small screens */
+    .results table {
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+    }
+
+    /* Adjust table layout for small screens */
+    table th, table td {
+        white-space: nowrap;
+        padding: 8px;
+    }
+
+    table th {
+        font-size: 0.9rem;
+    }
+}
