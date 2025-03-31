@@ -2,7 +2,6 @@
 from flask import Flask, render_template, request, jsonify  # Flask web framework components
 from datetime import datetime, timedelta  # For date manipulation
 import requests  # For making HTTP requests to APIs
-from lxml import html  # For parsing HTML from CoinMarketCap
 import json  # For handling JSON data
 import os  # For file system operations
 import sqlite3  # For SQLite database operations
@@ -48,6 +47,68 @@ def save_price_to_db(date, price):
         # Ensure the connection is closed even if an error occurs
         conn.close()
 
+# # Function to retrieve a Bitcoin price from the database
+# def get_price_from_db(date):
+#     try:
+#         # Connect to the database
+#         conn = sqlite3.connect(DB_PATH)
+#         c = conn.cursor()
+#         # Query the price for the specified date
+#         c.execute("SELECT price FROM prices WHERE date = ?", (date,))
+#         # Fetch the result (single row)
+#         result = c.fetchone()
+#         # If a result is found, log and return it
+#         if result:
+#             print(f"Found price {result[0]} for {date} in database")
+#             return result[0]
+#         # Return None if no price is found
+#         return None
+#     except Exception as e:
+#         # Log any errors during query
+#         print(f"Error querying database: {e}")
+#         return None
+#     finally:
+#         # Ensure the connection is closed
+#         conn.close()
+
+# # Function to fetch Bitcoin price for a specific date
+# def get_bitcoin_price_on_date(date_input):
+#     """Fetch Bitcoin price for the given date, check database first, then CryptoCompare API."""
+#     # First, try to get the price from the database
+#     price = get_price_from_db(date_input)
+#     # If price is found in DB, return it without hitting the API
+#     if price is not None:
+#         return price
+
+#     # Parse the input date string into a datetime object
+#     date_obj = datetime.strptime(date_input, "%Y-%m-%d")
+#     # If the date is in the future, use the current price instead
+#     if date_obj > datetime.now():
+#         return get_current_bitcoin_price()  # Avoid fetching historical data for future dates
+
+#     # Use CryptoCompare API for historical data
+#     timestamp = int(date_obj.timestamp())  # Convert date to Unix timestamp
+#     # Construct the URL for CryptoCompare historical price API
+#     url = f'https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=USD&ts={timestamp}'
+#     try:
+#         # Make HTTP GET request to CryptoCompare
+#         response = requests.get(url)
+#         # Raise an exception if the request fails (e.g., 404, 500)
+#         response.raise_for_status()
+#         # Parse the JSON response
+#         data = response.json()
+#         # Extract Bitcoin price in USD
+#         price_value = data['BTC']['USD']
+#         # Log the fetched price for debugging
+#         print(f"CryptoCompare price for {date_input}: {price_value}")
+#         # Save the fetched price to the database
+#         save_price_to_db(date_input, price_value)
+#         return price_value
+#     except requests.exceptions.RequestException as e:
+#         # Log any request-related errors (e.g., network issues)
+#         print(f"Error fetching historical price for {date_input}: {e}")
+#         return None
+
 # Function to retrieve a Bitcoin price from the database
 def get_price_from_db(date):
     try:
@@ -74,7 +135,7 @@ def get_price_from_db(date):
 
 # Function to fetch Bitcoin price for a specific date
 def get_bitcoin_price_on_date(date_input):
-    """Fetch Bitcoin price for the given date, check database first, then CoinMarketCap."""
+    """Fetch Bitcoin price for the given date, check database first, then CryptoCompare API."""
     # First, try to get the price from the database
     price = get_price_from_db(date_input)
     # If price is found in DB, return it without hitting the API
@@ -87,45 +148,32 @@ def get_bitcoin_price_on_date(date_input):
     if date_obj > datetime.now():
         return get_current_bitcoin_price()  # Avoid fetching historical data for future dates
 
-    # Format date for CoinMarketCap URL (YYYYMMDD)
-    formatted_date = date_obj.strftime("%Y%m%d")
-    # Construct the URL for CoinMarketCap historical data
-    url = f'https://coinmarketcap.com/historical/{formatted_date}/'
-    # Define headers to mimic a browser request
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
-    }
-
+    # Use CryptoCompare API for historical data
+    timestamp = int(date_obj.timestamp())  # Convert date to Unix timestamp
+    # Construct the URL for CryptoCompare historical price API
+    url = f'https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=USD&ts={timestamp}'
     try:
-        # Make HTTP GET request to CoinMarketCap
-        response = requests.get(url, headers=headers)
+        # Make HTTP GET request to CryptoCompare
+        response = requests.get(url)
         # Raise an exception if the request fails (e.g., 404, 500)
         response.raise_for_status()
-        # Parse the HTML response
-        tree = html.fromstring(response.content)
-        # Define XPath to extract Bitcoin price from the page
-        price_xpath = '//*[@id="__next"]/div[2]/div[2]/div/div[1]/div[3]/div[1]/div[3]/div/table/tbody/tr[1]/td[5]/div'
-        # Extract price element
-        price = tree.xpath(price_xpath)
-        # If price is found, process and save it
-        if price:
-            # Convert price text to float, removing commas and dollar signs
-            price_value = float(price[0].text.strip().replace(',', '').replace('$', ''))
-            # Save the fetched price to the database
-            save_price_to_db(date_input, price_value)
-            return price_value
-        else:
-            # Log if no price is found on the page
-            print(f"No price found for {date_input} on CoinMarketCap")
-            return None
+        # Parse the JSON response
+        data = response.json()
+        # Extract Bitcoin price in USD
+        price_value = data['BTC']['USD']
+        # Log the fetched price for debugging
+        print(f"CryptoCompare price for {date_input}: {price_value}")
+        # Save the fetched price to the database
+        save_price_to_db(date_input, price_value)
+        return price_value
     except requests.exceptions.RequestException as e:
         # Log any request-related errors (e.g., network issues)
-        print(f"Error fetching data for {date_input}: {e}")
+        print(f"Error fetching historical price for {date_input}: {e}")
         return None
 
 # Function to fetch the current Bitcoin price
 def get_current_bitcoin_price():
-    """Fetch the current Bitcoin price, check database first, then CoinGecko."""
+    """Fetch the current Bitcoin price, check database first, then CryptoCompare API."""
     # Use today's date as the key
     today = datetime.now().strftime("%Y-%m-%d")
     # Check if today's price is already in the database
@@ -134,23 +182,21 @@ def get_current_bitcoin_price():
     if price is not None:
         return price
 
-    # Define CoinGecko API URL for current Bitcoin price
-    url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
+    # Define CryptoCompare API URL for current Bitcoin price
+    url = 'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD'
     try:
-        # Make HTTP GET request to CoinGecko
+        # Make HTTP GET request to CryptoCompare
         response = requests.get(url)
         # Raise exception if request fails
         response.raise_for_status()
-        # Parse JSON response
-        data = response.json()
-        # Extract Bitcoin price in USD
-        price = data['bitcoin']['usd']
+        # Parse JSON response and extract USD price
+        price_value = response.json()['USD']
         # Save the current price to the database
-        save_price_to_db(today, price)
-        return price
+        save_price_to_db(today, price_value)
+        return price_value
     except requests.exceptions.RequestException as e:
         # Log any errors fetching current price
-        print(f"Error fetching current Bitcoin price: {e}")
+        print(f"Error fetching current price: {e}")
         return None
 
 # Function to generate a list of investment dates
