@@ -1,260 +1,249 @@
+/* Base styling for the entire page */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 20px;
-    color: #333;
+    font-family: 'Arial', sans-serif;    /* Set default font to Arial or fallback sans-serif */
+    background-color: #f5f5f5;           /* Light gray background for the page */
+    margin: 0;                           /* Remove default browser margins */
+    padding: 20px;                       /* Add padding around the body content */
+    color: #333;                         /* Default text color (dark gray) */
 }
 
-/* Make the header fixed at the top */
+/* Styling for the header (h1), fixed at the top */
 h1 {
-    text-align: center;
-        border-radius: 30px;
-    color: #4CAF50;
-    font-size: 2.5rem;
-    animation: fadeIn 1s ease-out;
-    top: 0;
-    left: 0;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 10; /* Ensure the header stays above other content */
+    text-align: center;                  /* Center the header text */
+    border-radius: 30px;                 /* Rounded corners for a softer look */
+    color: #4CAF50;                      /* Green text color for branding */
+    font-size: 2.5rem;                   /* Large font size for prominence */
+    animation: fadeIn 1s ease-out;       /* Fade-in animation on page load */
+    top: 0;                              /* Position at the top of the viewport */
+    left: 0;                             /* Align to the left edge */
+    background-color: #fff;              /* White background to stand out */
+    padding: 20px;                       /* Padding inside the header */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    z-index: 10;                         /* Ensure header stays above other content */
+    position: sticky;                    /* Stick to top when scrolling */
 }
 
-/* Make the form fixed below the header */
+/* Styling for the form, positioned below the header */
 form {
-    background-color: #fff;
-    padding: 40px;
-    border-radius: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;              /* White background for contrast */
+    padding: 40px;                       /* Generous padding inside the form */
+    border-radius: 30px;                 /* Rounded corners for a modern look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+    margin: 20px auto;                   /* Center form horizontally with top/bottom margin */
+    max-width: 600px;                    /* Limit form width for readability */
 }
 
-/* Adjust the container to allow space for the fixed header */
+/* Styling for the results container */
 .container {
-    margin: 20px auto 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    animation: slideUp 0.5s ease-out;
-    display: flex;
-    justify-content: center;
-    gap: 400px;
-    font-size: 1.2rem;
+    margin: 20px auto 20px auto;         /* Center container with top/bottom margin */
+    padding: 20px;                       /* Padding inside the container */
+    background-color: #fff;              /* White background for content */
+    border-radius: 30px;                 /* Rounded corners for consistency */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    animation: slideUp 0.5s ease-out;    /* Slide-up animation when shown */
+    display: flex;                       /* Flexbox layout for child elements */
+    justify-content: center;             /* Center flex items horizontally */
+    gap: 400px;                          /* Large gap between flex items (summary left/right) */
+    font-size: 1.2rem;                   /* Slightly larger text for readability */
 }
 
+/* Styling for form input groups */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 15px;                 /* Space between form fields */
 }
 
+/* Styling for form labels */
 label {
-    font-weight: bold;
-    font-size: 1.1rem;
+    font-weight: bold;                   /* Bold text for emphasis */
+    font-size: 1.1rem;                   /* Slightly larger font for clarity */
 }
 
+/* Styling for text, number, and date inputs */
 input[type="text"],
 input[type="number"],
 input[type="date"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
+    width: 100%;                         /* Full width of parent container */
+    padding: 10px;                       /* Padding inside the input */
+    margin-top: 5px;                     /* Space above the input */
+    border: 1px solid #ddd;              /* Light gray border */
+    border-radius: 5px;                  /* Slightly rounded corners */
+    font-size: 1rem;                     /* Standard font size */
+    transition: border-color 0.3s ease;  /* Smooth border color change on focus */
 }
 
+/* Focus state for inputs */
 input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="date"]:focus {
-    border-color: #4CAF50;
+    border-color: #4CAF50;               /* Green border when focused */
 }
 
+/* Styling for buttons */
 .btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
+    background-color: #4CAF50;           /* Green background for primary action */
+    color: white;                        /* White text for contrast */
+    padding: 10px 20px;                  /* Padding for button size */
+    border: none;                        /* No border for clean look */
+    border-radius: 5px;                  /* Slightly rounded corners */
+    cursor: pointer;                     /* Hand cursor on hover */
+    font-size: 1.1rem;                   /* Slightly larger font for emphasis */
+    transition: background-color 0.3s ease; /* Smooth background color change on hover */
 }
 
+/* Hover state for buttons */
 .btn:hover {
-    background-color: #45a049;
+    background-color: #45a049;           /* Darker green on hover */
 }
 
+/* Styling for the results section */
 .results {
-    margin-top: 30px;
-    animation: fadeIn 1.5s ease-out;
+    margin-top: 30px;                    /* Space above results */
+    animation: fadeIn 1.5s ease-out;     /* Fade-in animation for results */
 }
 
+/* Styling for tables */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    animation: slideUp 0.7s ease-out;
+    width: 100%;                         /* Full width of parent */
+    border-collapse: collapse;           /* Remove spacing between table cells */
+    margin-top: 20px;                    /* Space above table */
+    animation: slideUp 0.7s ease-out;    /* Slide-up animation for table */
 }
 
+/* Styling for table headers and cells */
 th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+    padding: 12px;                       /* Padding inside cells */
+    text-align: left;                    /* Left-align text */
+    border-bottom: 1px solid #ddd;       /* Light gray border between rows */
 }
 
+/* Styling for table headers specifically */
 th {
-    background-color: #f2f2f2;
-    color: #333;
+    background-color: #f2f2f2;           /* Light gray background for headers */
+    color: #333;                         /* Dark gray text */
 }
 
+/* Styling for the result summary section */
 .result-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 80px;
-    animation: fadeIn 2s ease-out;
-    font-size: 1.8rem;
+    display: flex;                       /* Flexbox layout for summary */
+    flex-direction: column;              /* Stack items vertically */
+    gap: 10px;                           /* Space between items */
+    margin-top: 80px;                    /* Large top margin to position below form */
+    animation: fadeIn 2s ease-out;       /* Fade-in animation */
+    font-size: 1.8rem;                   /* Large font for summary text */
 }
 
+/* Styling for profit status text */
 .profit {
-    color: #4CAF50;
-    font-weight: bold;
-    animation: fadeIn 2s ease-out;
+    color: #4CAF50;                      /* Green color for profit */
+    font-weight: bold;                   /* Bold text for emphasis */
+    animation: fadeIn 2s ease-out;       /* Fade-in animation */
 }
 
+/* Styling for loss status text */
 .loss {
-    color: #FF6347;
-    font-weight: bold;
-    animation: fadeIn 2s ease-out;
+    color: #FF6347;                      /* Red color for loss */
+    font-weight: bold;                   /* Bold text for emphasis */
+    animation: fadeIn 2s ease-out;       /* Fade-in animation */
 }
 
-/* Animations */
+/* Define animations */
 @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% { opacity: 0; }                   /* Start fully transparent */
+    100% { opacity: 1; }                 /* End fully opaque */
 }
 
 @keyframes slideUp {
-    0% { transform: translateY(20px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+    0% { transform: translateY(20px); opacity: 0; }  /* Start 20px down and transparent */
+    100% { transform: translateY(0); opacity: 1; }    /* End at original position and opaque */
 }
 
-/* Responsive design for tables and body */
+/* Responsive design adjustments for screens up to 768px */
 @media (max-width: 768px) {
     .container {
-        padding: 15px;
-        flex-direction: column;
-        align-items: center;
+        padding: 15px;                   /* Reduced padding for smaller screens */
+        flex-direction: column;          /* Stack flex items vertically */
+        align-items: center;             /* Center items horizontally */
     }
 
     .form-group {
-        width: 100%;
+        width: 100%;                     /* Full width for form groups */
     }
 
     .btn {
-        width: 100%;
+        width: 100%;                     /* Full width buttons on small screens */
     }
 
-    /* Make tables scrollable on small screens */
+    /* Make tables scrollable horizontally on small screens */
     .results table {
-        width: 100%;
-        overflow-x: auto;
-        display: block;
-        white-space: nowrap;
+        width: 100%;                     /* Full width */
+        overflow-x: auto;                /* Enable horizontal scrolling */
+        display: block;                  /* Treat table as block for scrolling */
+        white-space: nowrap;             /* Prevent text wrapping */
     }
 
-    /* Adjust table layout for small screens */
+    /* Adjust table cell styling for small screens */
     table th, table td {
-        white-space: nowrap;
-        padding: 8px;
+        white-space: nowrap;             /* Prevent text wrapping in cells */
+        padding: 8px;                    /* Reduced padding for compactness */
     }
 
     table th {
-        font-size: 0.9rem;
+        font-size: 0.9rem;               /* Smaller font for headers */
     }
 }
 
-/* Add to existing style.css */
-
-/* Error styling */
+/* Error input styling */
 .error {
-    border-color: #FF6347 !important;
-}
-
-.error-message {
-    color: #FF6347;
-    font-size: 0.9rem;
-    margin-top: 5px;
-}
-
-.top-error {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffebee;
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    z-index: 1000;
-}
-
-/* Loading state */
-form.loading {
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-.btn:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-/* Enhance table hover effect */
-table tr:hover {
-    background-color: #f9f9f9;
-    transition: background-color 0.2s ease;
-}
-
-/* Ensure container is properly styled when shown */
-.container {
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    animation: slideUp 0.5s ease-out;
-}
-
-/* Fix form positioning */
-form {
-    background-color: #fff;
-    padding: 40px;
-    border-radius: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    max-width: 600px;
-}
-
-/* Ensure h1 stays visible */
-h1 {
-    position: sticky;
-    top: 0;
-    background-color: #fff;
-    padding: 20px;
-    z-index: 10;
+    border-color: #FF6347 !important;    /* Red border for error inputs, override other styles */
 }
 
 /* Error message styling */
+.error-message {
+    color: #FF6347;                      /* Red text for errors */
+    font-size: 0.9rem;                   /* Smaller font for subtlety */
+    margin-top: 5px;                     /* Space above error message */
+}
+
+/* Styling for top-positioned error messages */
+.top-error {
+    position: fixed;                     /* Fixed position at the top */
+    top: 10px;                           /* 10px from the top */
+    left: 50%;                           /* Center horizontally */
+    transform: translateX(-50%);         /* Offset by half its width to center */
+    background-color: #ffebee;           /* Light red background */
+    padding: 10px 20px;                  /* Padding inside the error box */
+    border-radius: 5px;                  /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
+    z-index: 1000;                       /* High z-index to stay above all content */
+}
+
+/* Styling for form during loading state */
+form.loading {
+    opacity: 0.7;                        /* Reduce opacity to indicate loading */
+    pointer-events: none;                /* Disable interactions during loading */
+}
+
+/* Styling for disabled buttons */
+.btn:disabled {
+    background-color: #cccccc;           /* Gray background when disabled */
+    cursor: not-allowed;                 /* Indicate button is not clickable */
+}
+
+/* Hover effect for table rows */
+table tr:hover {
+    background-color: #f9f9f9;           /* Light gray background on hover */
+    transition: background-color 0.2s ease; /* Smooth transition for hover effect */
+}
+
+/* Ensure error message styling for top errors (repeated for clarity) */
 .error-message.top-error {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffebee;
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    z-index: 1000;
+    position: fixed;                     /* Fixed position at the top */
+    top: 10px;                           /* 10px from the top */
+    left: 50%;                           /* Center horizontally */
+    transform: translateX(-50%);         /* Offset by half its width to center */
+    background-color: #ffebee;           /* Light red background */
+    padding: 10px 20px;                  /* Padding inside the error box */
+    border-radius: 5px;                  /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
+    z-index: 1000;                       /* High z-index to stay above all content */
 }

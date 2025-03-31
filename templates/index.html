@@ -1,35 +1,59 @@
+<!-- Declare the document type as HTML5 -->
 <!DOCTYPE html>
+<!-- Define the HTML document with Bulgarian language attribute -->
 <html lang="bg">
 <head>
+    <!-- Set character encoding to UTF-8 for proper text rendering -->
     <meta charset="UTF-8">
+    <!-- Ensure responsive design with viewport settings -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Крипто Инвестиции</title>
+    <!-- Set the page title displayed in the browser tab -->
+    <title>Биткойн Калкулатор</title>
+    <!-- Link to the external CSS stylesheet using Flask's url_for helper -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Инвестиции в Биткойн</h1>
+    <!-- Main heading for the page -->
+    <h1>Биткойн Калкулатор</h1>
+
+    <!-- Form for user input, submits data to the Flask backend via POST -->
     <form method="POST" id="investment-form">
+        <!-- Form group for the start date input -->
         <div class="form-group">
+            <!-- Label for the start date field -->
             <label for="start_date">Начална дата:</label>
+            <!-- Date input field, required for submission -->
             <input type="date" id="start_date" name="start_date" required>
         </div>
+        <!-- Form group for the end date input -->
         <div class="form-group">
+            <!-- Label for the end date field -->
             <label for="end_date">Крайна дата:</label>
+            <!-- Date input field, required for submission -->
             <input type="date" id="end_date" name="end_date" required>
         </div>
+        <!-- Form group for the investment amount input -->
         <div class="form-group">
-            <label for="amount">Сума за инвестиция на период:</label>
+            <!-- Label for the investment amount field -->
+            <label for="amount">Инвестиционна сума:</label>
+            <!-- Number input field, required for submission -->
             <input type="number" id="amount" name="amount" required>
         </div>
+        <!-- Form group for the investment period input -->
         <div class="form-group">
+            <!-- Label for the period (in weeks) field -->
             <label for="period_weeks">Периодичност (в седмици):</label>
+            <!-- Number input field, required for submission -->
             <input type="number" id="period_weeks" name="period_weeks" required>
         </div>
+        <!-- Submit button to trigger form submission -->
         <button type="submit" class="btn">Изчисли</button>
     </form>
 
+    <!-- Container for displaying calculation results, initially hidden -->
     <div class="container" id="results-container" style="display: none;"></div>
 
+    <!-- Link to the external JavaScript file using Flask's url_for helper -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
